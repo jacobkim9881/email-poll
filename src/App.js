@@ -3,7 +3,7 @@ import './App.css';
 function App() {
   return (
     <div className="App">
-<div className="g-signin2" data-onsuccess="onSignIn()"></div>
+<div className="g-signin2" data-onsuccess="onSignIn"></div>
 
 	 <form id='put-email'>
 		 <input type='text' />
