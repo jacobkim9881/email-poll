@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>             
+ <head> 
+  <meta charset="utf-8" />
+<meta name="google-signin-client_id" content="93166671531-j2km9k00e9tq7i9tvpdk3u3hkjjl1n4g.apps.googleusercontent.com"> 
+  <title>test</title>
+<style>
+ #put-email {
+  display: block;
+  margin: 0 auto;
+  width: 500px;	 
+  bottom: 50%;	  
+ }
+</style>
+ </head> 
+ <body>
+ <script src="https://apis.google.com/js/platform.js" async defer></script>
+<script src="https://apis.google.com/js/api.js"></script>
+<div class="g-signin2" data-onsuccess="onSignIn"></div>
+
+	 <form id='put-email'>
+		 <input type='text' />
+		 <input type='submit' />
+	 </form>
+ </body>
+	<script>
+		/*
+gapi.auth2.init({client_id:"vibrant-catbird-228703.apps.googleusercontent.com"})
+	.then(data => console.log(data))
+	*/
+function onSignIn(googleUser) {
+  var profile = googleUser.getBasicProfile();
+  console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+  console.log('Name: ' + profile.getName());
+  console.log('Image URL: ' + profile.getImageUrl());
+  console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+}
+
+	</script>
+</html>
+
