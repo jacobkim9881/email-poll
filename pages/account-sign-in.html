@@ -33,7 +33,7 @@
               <h1 class="mb-1">Welcome back</h1>
               <span>Enter your account details below</span>
             </div>
-	    <form action="http://localhost:5000/auth" method="post" enctype="application/x-www-form-urlencoded"> 
+	    <form > 
               <div class="form-group">
                 <input type="email" name="name" placeholder="Email Address" class="form-control">
               </div>
@@ -52,7 +52,7 @@
               </div>
               <hr>
               <div class="text-center text-small text-muted">
-                <span>Don't have an account yet? <a href="./account-sign-up.html">Create one</a>
+                <span id='test1'>Don't have an account yet? <a href="./account-sign-up.html">Create one</a>
                 </span>
               </div>
             </form>
@@ -108,10 +108,90 @@
     <script type="text/javascript" src="assets/js/theme.js"></script>
     <!-- Removes page load animation when window is finished loading -->
     <script type="text/javascript">
+     const url = 'http://localhost:3000'	    
       window.addEventListener("load", function () {    document.querySelector('body').classList.add('loaded');  });
+
+     
      console.log('session: ', document.session);
-     console.log('cookie: ', document);
+     console.log('cookie: ', document.cookie);
      const getform = document.querySelector('form');
+	
+     getform.onsubmit = function() {
+     const name = document.querySelector('input[name=name]');
+     const pass = document.querySelector('input[name=password]');
+	     
+     console.log(name, pass);
+     }
+
+  async function checkLogin() {
+	  const curSess = JSON.parse(sessionStorage.getItem('tmfSession'));
+    const nowT = new Date().getTime();	 
+	  console.log('sess: ', curSess, nowT);
+	  const sessTime = new Date(curSess["cookie"]["_expires"]);
+	  console.log('sess time: ', sessTime.getTime() - nowT);
+	  const expired = sessTime.getTime() - nowT < 1 ? true : false;
+	  console.log('expired? : ', expired); 
+	  if (curSess && !expired) {
+          //window.location.open(url)
+	  } else if (curSess && expired) {
+          sess.loggedin = false;		  
+          sessionStorage.tmfSession = JSON.stringify(sess);
+	  }
+  };
+  async function test() {
+	  
+   await fetch('http://localhost:5000/auth', {
+    method: 'POST',
+     mode: 'cors', // no-cors, *cors, same-origin
+    cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+    credentials: 'omit', // include, *same-origin, omit
+    headers: {
+      'Content-Type': 'application/json',
+	    'Access-Control-Allow-Methods': "GET, POST, OPTIONS",
+'Access-Control-Allow-Origin': "http://localhost:5000",
+	    'Access-Control-Allow-Credentials': 'true',
+	    'Access-Control-Allow-Headers': "accept, content-type"
+      // 'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    redirect: 'follow', // manual, *follow, error
+    referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+	    body: JSON.stringify({
+	    name: "test3",
+		    password: "1"
+	    }) // body data type must match "Content-Type" header	    
+    })
+    .then((data) =>{console.log(data)})
+    
+  }
+  const test1 = document.getElementById('test1');
+  test1.onclick = function() {
+//  test();
+  
+  let cookie = sess.username + '=' + sess.cookie._expires + ";";
+  document.cookie = cookie;	  
+	 console.log(cookie);
+	  sessionStorage.tmfSession = JSON.stringify(sess);
+	  console.log(sessionStorage);
+ }
+
+  let today = new Date();
+  today = today.getTime() + 1000 * 60 * 2;
+  today = new Date(today);
+  console.log(today);
+  const sess = {
+	  
+  cookie: {
+    path: '/',
+    _expires: today,
+    originalMaxAge: 1000 * 60 * 2,
+    httpOnly: true,
+    secure: true
+  },
+  loggedin: true,
+  username: 'test4'
+  }
+  console.log(sess.username)
+  checkLogin();
     </script>
 <script src="https://apis.google.com/js/platform.js" async defer></script>
 <script src="https://apis.google.com/js/api.js"></script>
