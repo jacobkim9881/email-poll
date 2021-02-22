@@ -1524,10 +1524,24 @@
     <script type="text/javascript" src="assets/js/theme.js"></script>
     <!-- Removes page load animation when window is finished loading -->
     <script type="text/javascript">
-      window.addEventListener("load", function () {    document.querySelector('body').classList.add('loaded');  });
 
-    let loginBtn = document.getElementById('login-btn');
-
+      window.addEventListener("load", function () {
+      document.querySelector('body').classList.add('loaded');
+      });
+    const url = 'localhost:3000/'
+let loginBtn = document.getElementById('login-btn');
+    const loggedin = JSON.parse(sessionStorage.getItem('tmfSession')).loggedin;
+ 
+      if (loggedin) {
+ 	document.getElementById('login-btn').innerText = 'Logout';
+      } else {
+ 	document.getElementById('login-btn').innerText = 'Login';
+      }
+loginBtn.onclick = function() {
+    sessionStorage.removeItem('tmfSession');
+    loginBtn.href='';
+    window.location.redirect();
+}
     </script>
 
   </body>
