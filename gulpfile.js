@@ -319,7 +319,8 @@ gulp.task('serve', function (done) {
     server: {
       baseDir: './dist',
       index: "index.html"
-    }
+    },
+    https: true	  
   });
   done();
 });
