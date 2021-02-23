@@ -157,7 +157,7 @@ password.oninput = function() {
           sessionStorage.tmfSession = JSON.stringify(sess);
 	  }
   };
-  async function test() {
+  async function auth(name, password) {
 	  
    await fetch('http://localhost:5000/auth', {
     method: 'POST',
@@ -179,8 +179,10 @@ password.oninput = function() {
 		    password: "1"
 	    }) // body data type must match "Content-Type" header	    
     })
-    .then((data) =>{console.log(data)})
-    
+    .then((res) =>{res.json()})
+		  .then((data) => {
+		  sessionStorage.tmfSession = data;
+		  })
   }
   const test1 = document.getElementById('test1');
   test1.onclick = function() {
@@ -211,10 +213,12 @@ password.oninput = function() {
   }
   console.log(sess.username)
 
-  /*  signinBtn.onclick = function() {
-
+  signinBtn.onclick = function() {
+      const emailVal = document.querySelector('input[name=name]');
+      const passwordVal = document.querySelector('input[name=password]');
+  auth(emailVal, passwordVal);
   }
-*/
+
   checkLogin();
     </script>
 <script src="https://apis.google.com/js/platform.js" async defer></script>
