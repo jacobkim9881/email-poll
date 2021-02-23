@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <title>Leap Bootstrap Theme and HTML Template</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A corporate Bootstrap theme by Medium Rare">
+<meta name="google-signin-client_id" content="93166671531-j2km9k00e9tq7i9tvpdk3u3hkjjl1n4g.apps.googleusercontent.com"> 
+    <link href="assets/css/loaders/loader-typing.css" rel="stylesheet" type="text/css" media="all" />
+    <link href="assets/css/theme.css" rel="stylesheet" type="text/css" media="all" />
+    <link rel="preload" as="font" href="assets/fonts/Inter-UI-upright.var.woff2" type="font/woff2" crossorigin="anonymous">
+    <link rel="preload" as="font" href="assets/fonts/Inter-UI.var.woff2" type="font/woff2" crossorigin="anonymous">
+  </head>
+
+  <body>
+    <div class="loader">
+      <div class="loading-animation"></div>
+    </div>
+
+    <section class="min-vh-100 py-5">
+      <div class="container">
+        <div class="row justify-content-center mb-md-6">
+          <div class="col-auto">
+            <a href="index.html">
+              <img src="assets/img/logo.svg" alt="Leap">
+            </a>
+          </div>
+        </div>
+        <div class="row justify-content-center pt-6">
+          <div class="col-xl-4 col-lg-5 col-md-6">
+            <div class="text-center mb-4">
+              <h2 class="mb-1">Account Information</h1>
+            </div>
+            <form action="http://localhost:5000/info" method="post" enctype="application/x-www-form-urlencoded" id="sign-up-form">
+              <div class="form-group">
+                <input type="email" name="name" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" placeholder="Email Address" class="form-control">
+              </div>
+              <div class="form-group">
+ 		<small class="text-muted">Current password</small><br/>
+               <input type="password" name="password" pattern="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\S+$).{6,}$" placeholder="Password" class="form-control">
+		<small class="text-muted">Password confirmation</small><br/>
+ <input type="password" name="signup-password-confirm" placeholder="Confirm password" class="form-control">
+ 		<small class="text-muted">New password</small><br/>
+               <input type="password" name="new_password" pattern="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\S+$).{6,}$" placeholder="New Password" class="form-control">
+
+<small class="text-muted">Must be at least 6 characters</small><br/>
+        <small class="text-muted">Must have at least 1 capital character</small><br/>
+       <small class="text-muted">Must have at least 1 number</small>
+              </div>
+             <div class="form-group">
+                <button class="btn-block btn btn-primary" formtarget="_top" type="submit" id="save-btn">Save</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Required vendor scripts (Do not remove) -->
+    <script type="text/javascript" src="assets/js/jquery.min.js"></script>
+    <script type="text/javascript" src="assets/js/popper.min.js"></script>
+    <script type="text/javascript" src="assets/js/bootstrap.js"></script>
+
+    <!-- Optional Vendor Scripts (Remove the plugin script here and comment initializer script out of index.js if site does not use that feature) -->
+
+    <!-- AOS (Animate On Scroll - animates elements into view while scrolling down) -->
+    <script type="text/javascript" src="assets/js/aos.js"></script>
+    <!-- Clipboard (copies content from browser into OS clipboard) -->
+    <script type="text/javascript" src="assets/js/clipboard.min.js"></script>
+    <!-- Fancybox (handles image and video lightbox and galleries) -->
+    <script type="text/javascript" src="assets/js/jquery.fancybox.min.js"></script>
+    <!-- Flatpickr (calendar/date/time picker UI) -->
+    <script type="text/javascript" src="assets/js/flatpickr.min.js"></script>
+    <!-- Flickity (handles touch enabled carousels and sliders) -->
+    <script type="text/javascript" src="assets/js/flickity.pkgd.min.js"></script>
+    <!-- Ion rangeSlider (flexible and pretty range slider elements) -->
+    <script type="text/javascript" src="assets/js/ion.rangeSlider.min.js"></script>
+    <!-- Isotope (masonry layouts and filtering) -->
+    <script type="text/javascript" src="assets/js/isotope.pkgd.min.js"></script>
+    <!-- jarallax (parallax effect and video backgrounds) -->
+    <script type="text/javascript" src="assets/js/jarallax.min.js"></script>
+    <script type="text/javascript" src="assets/js/jarallax-video.min.js"></script>
+    <script type="text/javascript" src="assets/js/jarallax-element.min.js"></script>
+    <!-- jQuery Countdown (displays countdown text to a specified date) -->
+    <script type="text/javascript" src="assets/js/jquery.countdown.min.js"></script>
+    <!-- jQuery smartWizard facilitates steppable wizard content -->
+    <script type="text/javascript" src="assets/js/jquery.smartWizard.min.js"></script>
+    <!-- Plyr (unified player for Video, Audio, Vimeo and Youtube) -->
+    <script type="text/javascript" src="assets/js/plyr.polyfilled.min.js"></script>
+    <!-- Prism (displays formatted code boxes) -->
+    <script type="text/javascript" src="assets/js/prism.js"></script>
+    <!-- ScrollMonitor (manages events for elements scrolling in and out of view) -->
+    <script type="text/javascript" src="assets/js/scrollMonitor.js"></script>
+    <!-- Smooth scroll (animation to links in-page)-->
+    <script type="text/javascript" src="assets/js/smooth-scroll.polyfills.min.js"></script>
+    <!-- SVGInjector (replaces img tags with SVG code to allow easy inclusion of SVGs with the benefit of inheriting colors and styles)-->
+    <script type="text/javascript" src="assets/js/svg-injector.umd.production.js"></script>
+    <!-- TwitterFetcher (displays a feed of tweets from a specified account)-->
+    <script type="text/javascript" src="assets/js/twitterFetcher_min.js"></script>
+    <!-- Typed text (animated typing effect)-->
+    <script type="text/javascript" src="assets/js/typed.min.js"></script>
+    <!-- Required theme scripts (Do not remove) -->
+    <script type="text/javascript" src="assets/js/theme.js"></script>
+    <!-- Removes page load animation when window is finished loading -->
+ <script src="https://apis.google.com/js/platform.js" async defer></script>
+<script src="https://apis.google.com/js/api.js"></script>
+    <script type="text/javascript">
+      window.addEventListener("load", function () {    document.querySelector('body').classList.add('loaded');  });
+      const saveBtn = document.getElementById('save-btn');
+      const email = document.querySelector('input[name=name]');
+      const password = document.querySelector('input[name=password]');
+      const passwordConfirm = document.querySelector('input[name=signup-password-confirm]');
+      const newPassword = document.querySelector('input[name=new_password]');
+
+ email.oninput = function() {
+	    if (!email.value) {
+		    saveBtn.disabled = true;
+		    passwordConfirm.title = 'email should be put';
+	    } else saveBtn.disabled = false;
+
+}
+
+password.oninput = function() {
+	    if (!password.value) {
+		    saveBtn.disabled = true;
+		    passwordConfirm.title = 'Password should be put';
+	    } else saveBtn.disabled = false;
+
+}
+    passwordConfirm.oninput = function() {
+	    if (password.value !== passwordConfirm.value) {
+		    saveBtn.disabled = true;
+		    passwordConfirm.title = 'Passwords should be same';
+	    } else saveBtn.disabled = false;
+	    
+    }
+   async function changeInfo(name, password, newPassword) {
+	  
+   await fetch('http://localhost:5000/info', {
+    method: 'POST',
+     mode: 'cors', // no-cors, *cors, same-origin
+    cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+    credentials: 'omit', // include, *same-origin, omit
+    headers: {
+      'Content-Type': 'application/json',
+	    'Access-Control-Allow-Methods': "GET, POST, OPTIONS",
+'Access-Control-Allow-Origin': "http://localhost:5000",
+	    'Access-Control-Allow-Credentials': 'true',
+	    'Access-Control-Allow-Headers': "accept, content-type"
+      // 'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    redirect: 'follow', // manual, *follow, error
+    referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+	    body: JSON.stringify({
+	    "name": name,
+		   "password": password,
+	    "new_password" : newPassword
+	    }) // body data type must match "Content-Type" header	    
+    })
+    .then((res) =>{res.json()})
+		  .then((data) => {
+		   alert(data);
+		  })
+  }   
+    </script>
+
+  </body>
+
+</html>
