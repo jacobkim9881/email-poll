@@ -33,13 +33,13 @@
               <h1 class="mb-1">Welcome back</h1>
               <span>Enter your account details below</span>
             </div>
-	    <form action="http://localhost:5000/auth" method="post" enctype="application/x-www-form-urlencoded"> 
               <div class="form-group">
                 <input type="email" name="name" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" placeholder="Email Address" class="form-control">
               </div>
               <div class="form-group">
                 <input type="password" name="password" pattern="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\S+$).{6,}$" placeholder="Password" class="form-control">
-                <small><a href="#">Forgot your password?</a>
+		<small id="res-alert"></small><br/>
+               <small><a href="#">Forgot your password?</a>
                 </small>
               </div>
               <div class="form-group">
@@ -55,7 +55,6 @@
                 <span id='test1'>Don't have an account yet? <a href="./account-sign-up.html">Create one</a>
                 </span>
               </div>
-            </form>
           </div>
         </div>
       </div>
@@ -108,12 +107,13 @@
     <script type="text/javascript" src="assets/js/theme.js"></script>
     <!-- Removes page load animation when window is finished loading -->
     <script type="text/javascript">
-     const url = 'http://localhost:3000'	    
+     const url = 'https://localhost:3000/'	    
       window.addEventListener("load", function () {    document.querySelector('body').classList.add('loaded');  });
 
       const email = document.querySelector('input[name=name]');
       const password = document.querySelector('input[name=password]');
       const signinBtn = document.getElementById('signin-btn');
+const getform = document.querySelector('form');
 
  email.oninput = function() {
 	    if (!email.value) {
@@ -133,14 +133,6 @@ password.oninput = function() {
 
      console.log('session: ', document.session);
      console.log('cookie: ', document.cookie);
-     const getform = document.querySelector('form');
-	
-     getform.onsubmit = function() {
-     const name = document.querySelector('input[name=name]');
-     const pass = document.querySelector('input[name=password]');
-	     
-     console.log(name, pass);
-     }
 
   async function checkLogin() {
 	  const curSess = JSON.parse(sessionStorage.getItem('tmfSession'));
@@ -158,30 +150,41 @@ password.oninput = function() {
 	  }
   };
   async function auth(name, password) {
-	  
    await fetch('http://localhost:5000/auth', {
     method: 'POST',
      mode: 'cors', // no-cors, *cors, same-origin
-    cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-    credentials: 'omit', // include, *same-origin, omit
+    cache: 'default', // *default, no-cache, reload, force-cache, only-if-cached
+    credentials: 'same-origin', // include, *same-origin, omit
     headers: {
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json'
+	    /*
+	    ,
 	    'Access-Control-Allow-Methods': "GET, POST, OPTIONS",
 'Access-Control-Allow-Origin': "http://localhost:5000",
 	    'Access-Control-Allow-Credentials': 'true',
 	    'Access-Control-Allow-Headers': "accept, content-type"
+	    */
       // 'Content-Type': 'application/x-www-form-urlencoded',
     },
     redirect: 'follow', // manual, *follow, error
     referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
 	    body: JSON.stringify({
-	    name: "test3",
-		    password: "1"
+	    name: name,
+		    password: password
 	    }) // body data type must match "Content-Type" header	    
     })
-    .then((res) =>{res.json()})
-		  .then((data) => {
-		  sessionStorage.tmfSession = data;
+    .then((res) => res.json())
+  .then((data) => {
+	  let isError = Object.keys(data)[0] === "Error" ? true : false;
+	  let errMsg = isError ? Object.values(data)[0] : '';
+	  let resAlert = document.getElementById('res-alert');
+	  resAlert.style.color = 'red';
+          resAlert.innerText = errMsg;
+	  console.log(data);
+	  if(!isError) {
+	    sessionStorage.tmfSession = data
+	    window.location.replace(url); 
+	  };
 		  })
   }
   const test1 = document.getElementById('test1');
@@ -212,12 +215,13 @@ password.oninput = function() {
   username: 'test4'
   }
   console.log(sess.username)
+  const test3 = document.getElementById('login-remember');
+     signinBtn.onclick = function() {
+     const name = document.querySelector('input[name=name]').value;
+     const pass = document.querySelector('input[name=password]').value;
+     auth(name, pass)	     
+     }
 
-  signinBtn.onclick = function() {
-      const emailVal = document.querySelector('input[name=name]');
-      const passwordVal = document.querySelector('input[name=password]');
-  auth(emailVal, passwordVal);
-  }
 
   checkLogin();
     </script>
