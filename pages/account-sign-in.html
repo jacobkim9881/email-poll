@@ -107,8 +107,9 @@
     <script type="text/javascript" src="assets/js/theme.js"></script>
     <!-- Removes page load animation when window is finished loading -->
     <script type="text/javascript">
-     const url = 'https://localhost:3000/'	    
       window.addEventListener("load", function () {    document.querySelector('body').classList.add('loaded');  });
+ const url = 'https://localhost:3000/'	    
+ const api = 'http://localhost:5000/'	    
 
       const email = document.querySelector('input[name=name]');
       const password = document.querySelector('input[name=password]');
@@ -131,39 +132,47 @@ password.oninput = function() {
 
 }
 
-     console.log('session: ', document.session);
-     console.log('cookie: ', document.cookie);
+     //console.log('cookie: ', document.cookie);
 
   async function checkLogin() {
-	  const curSess = JSON.parse(sessionStorage.getItem('tmfSession'));
+//console.log('session1 : ', document.session.tmfSession)	 
+  const isSession = sessionStorage.getItem('tmfSession') ? true : false;	  
+  const curSess = isSession ? JSON.parse(sessionStorage.getItem('tmfSession')) : false;
     const nowT = new Date().getTime();	 
-	  console.log('sess: ', curSess, nowT);
-	  const sessTime = new Date(curSess["cookie"]["_expires"]);
-	  console.log('sess time: ', sessTime.getTime() - nowT);
-	  const expired = sessTime.getTime() - nowT < 1 ? true : false;
-	  console.log('expired? : ', expired); 
+	  //console.log('sess: ', curSess, nowT);
+	  const sessTime = isSession ? new Date(curSess["cookie"]["_expires"]) : false;
+	  const leftTime = isSession ? sessTime.getTime() - nowT : false; 
+	  const expired = leftTime < 1 ? true : false;
+	  //console.log('expired? : ', expired); 
 	  if (curSess && !expired) {
-          //window.location.open(url)
+          window.open(url,'_self')
 	  } else if (curSess && expired) {
-          sess.loggedin = false;		  
-          sessionStorage.tmfSession = JSON.stringify(sess);
+          //sess.loggedin = false;		  
+          //sessionStorage.tmfSession = JSON.stringify(sess);
 	  }
   };
   async function auth(name, password) {
-   await fetch('http://localhost:5000/auth', {
+console.log('info: ',name, password)
+   let headers = new Headers();
+   const authUrl = 'http://localhost:5000/auth';
+// 'https://whispering-brook-27977.herokuapp.com/auth';
+ headers.append('Content-Type', 'application/json'); 	  
+  headers.append('Access-Control-Allow-Origin', 'http://localhost:5000');	  
+  headers.append('Access-Control-Allow-Credentials', 'true');
+  headers.append('GET', 'POST', 'OPTIONS');	  
+  headers.append('Access-Control-Allow-Headers', "accept, content-type");
+   await fetch(authUrl, {
     method: 'POST',
      mode: 'cors', // no-cors, *cors, same-origin
     cache: 'default', // *default, no-cache, reload, force-cache, only-if-cached
-    credentials: 'same-origin', // include, *same-origin, omit
+    credentials: 'include', // include, *same-origin, omit
     headers: {
       'Content-Type': 'application/json'
-	    /*
 	    ,
 	    'Access-Control-Allow-Methods': "GET, POST, OPTIONS",
 'Access-Control-Allow-Origin': "http://localhost:5000",
 	    'Access-Control-Allow-Credentials': 'true',
 	    'Access-Control-Allow-Headers': "accept, content-type"
-	    */
       // 'Content-Type': 'application/x-www-form-urlencoded',
     },
     redirect: 'follow', // manual, *follow, error
@@ -173,16 +182,17 @@ password.oninput = function() {
 		    password: password
 	    }) // body data type must match "Content-Type" header	    
     })
-    .then((res) => res.json())
-  .then((data) => {
+		  .then(res => {
+			  return res.json()
+		  })
+  .then(data => {
 	  let isError = Object.keys(data)[0] === "Error" ? true : false;
 	  let errMsg = isError ? Object.values(data)[0] : '';
 	  let resAlert = document.getElementById('res-alert');
 	  resAlert.style.color = 'red';
           resAlert.innerText = errMsg;
-	  console.log(data);
 	  if(!isError) {
-	    sessionStorage.tmfSession = data
+	    sessionStorage.tmfSession = JSON.stringify(data)
 	    window.location.replace(url); 
 	  };
 		  })
@@ -190,18 +200,18 @@ password.oninput = function() {
   const test1 = document.getElementById('test1');
   test1.onclick = function() {
 //  test();
-  
+	  /*
   let cookie = sess.username + '=' + sess.cookie._expires + ";";
   document.cookie = cookie;	  
 	 console.log(cookie);
 	  sessionStorage.tmfSession = JSON.stringify(sess);
 	  console.log(sessionStorage);
+	  */
  }
-
+/*
   let today = new Date();
   today = today.getTime() + 1000 * 60 * 2;
   today = new Date(today);
-  console.log(today);
   const sess = {
 	  
   cookie: {
@@ -214,8 +224,8 @@ password.oninput = function() {
   loggedin: true,
   username: 'test4'
   }
-  console.log(sess.username)
   const test3 = document.getElementById('login-remember');
+  */
      signinBtn.onclick = function() {
      const name = document.querySelector('input[name=name]').value;
      const pass = document.querySelector('input[name=password]').value;
