@@ -294,8 +294,11 @@
               </ul>
             </div><a href="#" class="btn btn-white ml-lg-3">Purchase Now</a>
 	    --!>
-<a href="./account-sign-in.html" id="login-btn" class="m-1 btn btn-primary btn-light">Login</a>
-          </div>
+ <span id="welcom-msg"> </span>
+ <span id="user-id"></span>
+ <a href="./account-sign-in.html" id="login-btn" class="m-1 btn btn-primary btn-light">Login</a>
+<a href="./account-info.html" id="info-btn" class="m-1 btn btn-primary btn-light">Account info</a>
+         </div>
         </div>
       </nav>
     </div>
@@ -1529,19 +1532,36 @@
       document.querySelector('body').classList.add('loaded');
       });
     const url = 'localhost:3000/'
-let loginBtn = document.getElementById('login-btn');
-    const loggedin = JSON.parse(sessionStorage.getItem('tmfSession')).loggedin;
- 
-      if (loggedin) {
- 	document.getElementById('login-btn').innerText = 'Logout';
-      } else {
- 	document.getElementById('login-btn').innerText = 'Login';
-      }
-loginBtn.onclick = function() {
+const loginBtn = document.getElementById('login-btn');
+const infoBtn = document.getElementById('info-btn');
+const welcomMsg = document.getElementById('welcom-msg');
+const userId =  document.getElementById('user-id');
+
+function checkLogin() {
+	const idJson  = sessionStorage.tmfSession ? JSON.parse(sessionStorage.tmfSession) : false;
+if (idJson) {
+	if (idJson.session && idJson.session.loggedin) {
+	console.log('loggedin');
+        infoBtn.style.display = 'inline';
+	document.getElementById('login-btn').innerText = 'Logout';
+        welcomMsg.style.color = 'white';		
+        userId.style.color = 'red';		
+       welcomMsg.innerText= `Welcome!`
+        userId.innerText = `${idJson.session.username.split('@')[0]}`		     
+    loginBtn.onclick = function() {
     sessionStorage.removeItem('tmfSession');
     loginBtn.href='';
     window.location.redirect();
+
 }
+} else infoBtn.style.display = 'none';
+      	} else {
+        infoBtn.style.display = 'none';
+	document.getElementById('login-btn').innerText = 'Login';
+      }
+ 
+}
+checkLogin();
     </script>
 
   </body>
