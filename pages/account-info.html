@@ -32,7 +32,7 @@
             <div class="text-center mb-4">
               <h2 class="mb-1">Account Information</h1>
             </div>
-            <form action="http://localhost:5000/info" method="post" enctype="application/x-www-form-urlencoded" id="sign-up-form">
+            <div id="sign-up-form">
               <div class="form-group">
                 <input type="email" name="name" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" placeholder="Email Address" class="form-control">
               </div>
@@ -46,12 +46,13 @@
 
 <small class="text-muted">Must be at least 6 characters</small><br/>
         <small class="text-muted">Must have at least 1 capital character</small><br/>
-       <small class="text-muted">Must have at least 1 number</small>
-              </div>
+       <small class="text-muted">Must have at least 1 number</small><br/>
+       <small id="res-alert"></small>
+             </div>
              <div class="form-group">
                 <button class="btn-block btn btn-primary" formtarget="_top" type="submit" id="save-btn">Save</button>
               </div>
-            </form>
+            </div>
           </div>
         </div>
       </div>
@@ -112,6 +113,8 @@
       const password = document.querySelector('input[name=password]');
       const passwordConfirm = document.querySelector('input[name=signup-password-confirm]');
       const newPassword = document.querySelector('input[name=new_password]');
+      const url = 'https://localhost:3000/'	    
+      const api = 'http://localhost:5000/'	    
 
  email.oninput = function() {
 	    if (!email.value) {
@@ -126,7 +129,6 @@ password.oninput = function() {
 		    saveBtn.disabled = true;
 		    passwordConfirm.title = 'Password should be put';
 	    } else saveBtn.disabled = false;
-
 }
     passwordConfirm.oninput = function() {
 	    if (password.value !== passwordConfirm.value) {
@@ -141,7 +143,7 @@ password.oninput = function() {
     method: 'POST',
      mode: 'cors', // no-cors, *cors, same-origin
     cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-    credentials: 'omit', // include, *same-origin, omit
+    credentials: 'include', // include, *same-origin, omit
     headers: {
       'Content-Type': 'application/json',
 	    'Access-Control-Allow-Methods': "GET, POST, OPTIONS",
@@ -158,11 +160,21 @@ password.oninput = function() {
 	    "new_password" : newPassword
 	    }) // body data type must match "Content-Type" header	    
     })
-    .then((res) =>{res.json()})
-		  .then((data) => {
-		   alert(data);
-		  })
-  }   
+    .then(res =>res.json())
+  .then(data => {
+	  let isError = Object.keys(data)[0] === "Error" ? true : false;
+	  let errMsg = isError ? Object.values(data)[0] : '';
+	  let resAlert = document.getElementById('res-alert');
+ 	  resAlert.style.color = 'red';
+          resAlert.innerText = errMsg;
+	  if(!isError) {
+	    alert('Information is changed successfully.')	    
+      	    window.location.replace(url); 
+	  };		  })
+  } 
+  saveBtn.onclick = function() {
+   changeInfo(email.value, password.value, newPassword.value);
+  }
     </script>
 
   </body>
