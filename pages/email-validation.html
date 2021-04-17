@@ -28,32 +28,22 @@
           </div>
         </div>
         <div class="row justify-content-center pt-6">
-          <div class="col-xl-4 col-lg-5 col-md-6">
+          <div class="col-xl-6 col-lg-5 col-md-6">
             <div class="text-center mb-4">
-              <h2 class="mb-1">Account Information</h1>
+              <h1 class="mb-1">Your account is created!</h1>
+              <span>Now codes are sent to your email address and submitting the codes here will finish your validation for the email address. Please check and submit the codes in the email we sent to your email address.</span>
             </div>
-            <div id="sign-up-form">
               <div class="form-group">
-                <input type="email" name="name" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" placeholder="Email Address" class="form-control">
+                <input type="text" name="codes" placeholder="Put the codes in the email" class="form-control">
               </div>
               <div class="form-group">
- 		<small class="text-muted">Current password</small><br/>
-               <input type="password" name="password" pattern="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\S+$).{6,}$" placeholder="Password" class="form-control">
-		<small class="text-muted">Password confirmation</small><br/>
- <input type="password" name="signup-password-confirm" placeholder="Confirm password" class="form-control">
- 		<small class="text-muted">New password</small><br/>
-               <input type="password" name="new_password" pattern="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\S+$).{6,}$" placeholder="New Password" class="form-control">
-
-<small class="text-muted">Must be at least 6 characters</small><br/>
-        <small class="text-muted">Must have at least 1 capital character</small><br/>
-       <small class="text-muted">Must have at least 1 number</small><br/>
-       <small id="res-alert"></small>
-             </div>
-             <div class="form-group">
-                <button class="btn-block btn btn-primary" formtarget="_top" type="submit" id="save-btn">Save</button>
+		<small id="res-alert"></small><br/>
               </div>
-            </div>
-          </div>
+              <div class="form-group">
+                <button class="btn-block btn btn-primary" id="submit-validation" type="submit">Verify validation of your email address</button>
+              </div>
+              </div>
+              </div>
         </div>
       </div>
     </section>
@@ -104,48 +94,32 @@
     <!-- Required theme scripts (Do not remove) -->
     <script type="text/javascript" src="assets/js/theme.js"></script>
     <!-- Removes page load animation when window is finished loading -->
- <script src="https://apis.google.com/js/platform.js" async defer></script>
-<script src="https://apis.google.com/js/api.js"></script>
     <script type="text/javascript">
       window.addEventListener("load", function () {    document.querySelector('body').classList.add('loaded');  });
-      const saveBtn = document.getElementById('save-btn');
-      const email = document.querySelector('input[name=name]');
-      const password = document.querySelector('input[name=password]');
-      const passwordConfirm = document.querySelector('input[name=signup-password-confirm]');
-      const newPassword = document.querySelector('input[name=new_password]');
-      const url = 'https://localhost:3000/'	    
-      const api = 'http://localhost:5000/'	    
+ const url = 'https://localhost:3000/'	    
+ const api = 'http://localhost:5000/'	    
 
- email.oninput = function() {
+      const codes = document.querySelector('input[name=codes]');
+      const submitBtn = document.getElementById('submit-validation');
+
+ codes.oninput = function() {
 	    if (!email.value) {
-		    saveBtn.disabled = true;
-		    passwordConfirm.title = 'email should be put';
-	    } else saveBtn.disabled = false;
+		    submitBtn.disabled = true;
+		    email.title = 'codes should be put';
+	    } else submitBtn.disabled = false;
 
 }
 
-password.oninput = function() {
-	    if (!password.value) {
-		    saveBtn.disabled = true;
-		    passwordConfirm.title = 'Password should be put';
-	    } else saveBtn.disabled = false;
-}
-    passwordConfirm.oninput = function() {
-	    if (password.value !== passwordConfirm.value) {
-		    saveBtn.disabled = true;
-		    passwordConfirm.title = 'Passwords should be same';
-	    } else saveBtn.disabled = false;
-	    
-    }
-   async function changeInfo(name, password, newPassword) {
-	  
-   await fetch('http://localhost:5000/info', {
+  async function sendEmailCodes() {
+    const verifyApi = api + 'email'	  
+    await fetch(verifyApi, {
     method: 'POST',
      mode: 'cors', // no-cors, *cors, same-origin
-    cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+    cache: 'default', // *default, no-cache, reload, force-cache, only-if-cached
     credentials: 'include', // include, *same-origin, omit
     headers: {
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json'
+	    ,
 	    'Access-Control-Allow-Methods': "GET, POST, OPTIONS",
 'Access-Control-Allow-Origin': "http://localhost:5000",
 	    'Access-Control-Allow-Credentials': 'true',
@@ -155,45 +129,82 @@ password.oninput = function() {
     redirect: 'follow', // manual, *follow, error
     referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
 	    body: JSON.stringify({
-	    "name": name,
-		   "password": password,
-	    "new_password" : newPassword
+	    codes: codes
 	    }) // body data type must match "Content-Type" header	    
-    })
-    .then(res =>res.json())
-  .then(data => {
-	  let isError = Object.keys(data)[0] === "Error" ? true : false;
-	  let errMsg = isError ? Object.values(data)[0] : '';
-	  let resAlert = document.getElementById('res-alert');
- 	  resAlert.style.color = 'red';
-          resAlert.innerText = errMsg;
-	  if(!isError) {
-	    alert('Information is changed successfully.')	    
-      	    window.location.replace(url); 
-	  };		  })
-  } 
-  saveBtn.onclick = function() {
-   changeInfo(email.value, password.value, newPassword.value);
+    }) 
   }
+
   async function checkLogin() {
 //console.log('session1 : ', document.session.tmfSession)	 
   const isSession = sessionStorage.getItem('tmfSession') ? true : false;	  
   const curSess = isSession ? JSON.parse(sessionStorage.getItem('tmfSession')) : false;
     const nowT = new Date().getTime();	 
 	  //console.log('sess: ', curSess, nowT);
-	  const sessTime = isSession ? new Date(curSess["session"]["cookie"]["_expires"]) : false;
+	  const sessTime = isSession ? new Date(curSess["cookie"]["_expires"]) : false;
 	  const leftTime = isSession ? sessTime.getTime() - nowT : false; 
 	  const expired = leftTime < 1 ? true : false;
 	  //console.log('expired? : ', expired); 
 	  if (curSess && !expired) {
-	  } else if (!curSess || expired) {
           window.open(url,'_self')
-         //sess.loggedin = false;		  
+	  } else if (curSess && expired) {
+          //sess.loggedin = false;		  
           //sessionStorage.tmfSession = JSON.stringify(sess);
 	  }
   };
- checkLogin() 
+  async function verification(codes) {
+//console.log('info: ',)
+   const authUrl = 'http://localhost:5000/verification';
+// 'https://whispering-brook-27977.herokuapp.com/verification';
+ headers.append('Content-Type', 'application/json'); 	  
+  headers.append('Access-Control-Allow-Origin', 'http://localhost:5000');	  
+  headers.append('Access-Control-Allow-Credentials', 'true');
+  headers.append('GET', 'POST', 'OPTIONS');	  
+  headers.append('Access-Control-Allow-Headers', "accept, content-type");
+   await fetch(authUrl, {
+    method: 'POST',
+     mode: 'cors', // no-cors, *cors, same-origin
+    cache: 'default', // *default, no-cache, reload, force-cache, only-if-cached
+    credentials: 'include', // include, *same-origin, omit
+    headers: {
+      'Content-Type': 'application/json'
+	    ,
+	    'Access-Control-Allow-Methods': "GET, POST, OPTIONS",
+'Access-Control-Allow-Origin': "http://localhost:5000",
+	    'Access-Control-Allow-Credentials': 'true',
+	    'Access-Control-Allow-Headers': "accept, content-type"
+      // 'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    redirect: 'follow', // manual, *follow, error
+    referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+	    body: JSON.stringify({
+	    codes: codes
+	    }) // body data type must match "Content-Type" header	    
+    })
+		  .then(res => {
+			  return res.json()
+		  })
+  .then(data => {
+	  let isError = Object.keys(data)[0] === "Error" ? true : false;
+	  let errMsg = isError ? Object.values(data)[0] : '';
+	  let resAlert = document.getElementById('res-alert');
+	  resAlert.style.color = 'red';
+          resAlert.innerText = errMsg;
+	  if(!isError) {
+	    sessionStorage.tmfSession = JSON.stringify(data)
+	    window.location.replace(url); 
+	  };
+		  })
+  }
+     signinBtn.onclick = function() {
+     const codesVal = document.querySelector('input[name=codes]').value;
+     verification(codes)	     
+     }
+
+
+//  checkLogin();
     </script>
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+<script src="https://apis.google.com/js/api.js"></script>
 
   </body>
 

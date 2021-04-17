@@ -33,17 +33,17 @@
               <h1 class="mb-1">Welcome back</h1>
               <span>Enter your account details below</span>
             </div>
-	    <form action="http://localhost:5000/auth" method="post" enctype="application/x-www-form-urlencoded"> 
               <div class="form-group">
-                <input type="email" name="name" placeholder="Email Address" class="form-control">
+                <input type="email" name="name" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" placeholder="Email Address" class="form-control">
               </div>
               <div class="form-group">
-                <input type="password" name="password" placeholder="Password" class="form-control">
-                <small><a href="#">Forgot your password?</a>
+                <input type="password" name="password" pattern="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\S+$).{6,}$" placeholder="Password" class="form-control">
+		<small id="res-alert"></small><br/>
+               <small><a href="#">Forgot your password?</a>
                 </small>
               </div>
               <div class="form-group">
-                <button class="btn-block btn btn-primary" type="submit">Sign in</button>
+                <button class="btn-block btn btn-primary" id="signin-btn" type="submit">Sign in</button>
               </div>
 <div class="g-signin2" data-onsuccess="onSignIn"></div>
 <div class="custom-control custom-checkbox">
@@ -52,10 +52,9 @@
               </div>
               <hr>
               <div class="text-center text-small text-muted">
-                <span>Don't have an account yet? <a href="./account-sign-up.html">Create one</a>
+                <span id='test1'>Don't have an account yet? <a href="./account-sign-up.html">Create one</a>
                 </span>
               </div>
-            </form>
           </div>
         </div>
       </div>
@@ -109,9 +108,132 @@
     <!-- Removes page load animation when window is finished loading -->
     <script type="text/javascript">
       window.addEventListener("load", function () {    document.querySelector('body').classList.add('loaded');  });
-     console.log('session: ', document.session);
-     console.log('cookie: ', document);
-     const getform = document.querySelector('form');
+ const url = 'https://localhost:3000/'	    
+ const api = 'http://localhost:5000/'	    
+
+      const email = document.querySelector('input[name=name]');
+      const password = document.querySelector('input[name=password]');
+      const signinBtn = document.getElementById('signin-btn');
+const getform = document.querySelector('form');
+
+ email.oninput = function() {
+	    if (!email.value) {
+		    signinBtn.disabled = true;
+		    email.title = 'email should be put';
+	    } else signinBtn.disabled = false;
+
+}
+
+password.oninput = function() {
+	    if (!password.value) {
+		    signinBtn.disabled = true;
+		    password.title = 'Password should be put';
+	    } else signinBtn.disabled = false;
+
+}
+
+     //console.log('cookie: ', document.cookie);
+
+  async function checkLogin() {
+//console.log('session1 : ', document.session.tmfSession)	 
+  const isSession = sessionStorage.getItem('tmfSession') ? true : false;	  
+  const curSess = isSession ? JSON.parse(sessionStorage.getItem('tmfSession')) : false;
+    const nowT = new Date().getTime();	 
+	  //console.log('sess: ', curSess, nowT);
+	  const sessTime = isSession ? new Date(curSess["cookie"]["_expires"]) : false;
+	  const leftTime = isSession ? sessTime.getTime() - nowT : false; 
+	  const expired = leftTime < 1 ? true : false;
+	  //console.log('expired? : ', expired); 
+	  if (curSess && !expired) {
+          window.open(url,'_self')
+	  } else if (curSess && expired) {
+          //sess.loggedin = false;		  
+          //sessionStorage.tmfSession = JSON.stringify(sess);
+	  }
+  };
+  async function auth(name, password) {
+console.log('info: ',name, password)
+   let headers = new Headers();
+   const authUrl = 'http://localhost:5000/auth';
+// 'https://whispering-brook-27977.herokuapp.com/auth';
+ headers.append('Content-Type', 'application/json'); 	  
+  headers.append('Access-Control-Allow-Origin', 'http://localhost:5000');	  
+  headers.append('Access-Control-Allow-Credentials', 'true');
+  headers.append('GET', 'POST', 'OPTIONS');	  
+  headers.append('Access-Control-Allow-Headers', "accept, content-type");
+   await fetch(authUrl, {
+    method: 'POST',
+     mode: 'cors', // no-cors, *cors, same-origin
+    cache: 'default', // *default, no-cache, reload, force-cache, only-if-cached
+    credentials: 'include', // include, *same-origin, omit
+    headers: {
+      'Content-Type': 'application/json'
+	    ,
+	    'Access-Control-Allow-Methods': "GET, POST, OPTIONS",
+'Access-Control-Allow-Origin': "http://localhost:5000",
+	    'Access-Control-Allow-Credentials': 'true',
+	    'Access-Control-Allow-Headers': "accept, content-type"
+      // 'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    redirect: 'follow', // manual, *follow, error
+    referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+	    body: JSON.stringify({
+	    name: name,
+		    password: password
+	    }) // body data type must match "Content-Type" header	    
+    })
+		  .then(res => {
+			  return res.json()
+		  })
+  .then(data => {
+	  let isError = Object.keys(data)[0] === "Error" ? true : false;
+	  let errMsg = isError ? Object.values(data)[0] : '';
+	  let resAlert = document.getElementById('res-alert');
+	  resAlert.style.color = 'red';
+          resAlert.innerText = errMsg;
+	  if(!isError) {
+	    sessionStorage.tmfSession = JSON.stringify(data)
+	    window.location.replace(url); 
+	  };
+		  })
+  }
+  const test1 = document.getElementById('test1');
+  test1.onclick = function() {
+//  test();
+	  /*
+  let cookie = sess.username + '=' + sess.cookie._expires + ";";
+  document.cookie = cookie;	  
+	 console.log(cookie);
+	  sessionStorage.tmfSession = JSON.stringify(sess);
+	  console.log(sessionStorage);
+	  */
+ }
+/*
+  let today = new Date();
+  today = today.getTime() + 1000 * 60 * 2;
+  today = new Date(today);
+  const sess = {
+	  
+  cookie: {
+    path: '/',
+    _expires: today,
+    originalMaxAge: 1000 * 60 * 2,
+    httpOnly: true,
+    secure: true
+  },
+  loggedin: true,
+  username: 'test4'
+  }
+  const test3 = document.getElementById('login-remember');
+  */
+     signinBtn.onclick = function() {
+     const name = document.querySelector('input[name=name]').value;
+     const pass = document.querySelector('input[name=password]').value;
+     auth(name, pass)	     
+     }
+
+
+  checkLogin();
     </script>
 <script src="https://apis.google.com/js/platform.js" async defer></script>
 <script src="https://apis.google.com/js/api.js"></script>
