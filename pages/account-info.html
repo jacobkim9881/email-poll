@@ -47,7 +47,10 @@
 <small class="text-muted">Must be at least 6 characters</small><br/>
         <small class="text-muted">Must have at least 1 capital character</small><br/>
        <small class="text-muted">Must have at least 1 number</small><br/>
-       <small id="res-alert"></small>
+       <small id="res-alert"></small><br/><br/>
+       <small class="text-muted">Delete account</small><br/>
+       <button class="m-1 btn btn-danger" formtarget="_top" type="submit" id="delete-btn">Delete account</button>
+
              </div>
              <div class="form-group">
                 <button class="btn-block btn btn-primary" formtarget="_top" type="submit" id="save-btn">Save</button>
@@ -112,6 +115,7 @@
       const email = document.querySelector('input[name=name]');
       const password = document.querySelector('input[name=password]');
       const passwordConfirm = document.querySelector('input[name=signup-password-confirm]');
+      const deleteBtn = document.getElementById('delete-btn');
       const newPassword = document.querySelector('input[name=new_password]');
       const url = 'https://localhost:3000/'	    
       const api = 'http://localhost:5000/'	    
@@ -175,6 +179,36 @@ password.oninput = function() {
   saveBtn.onclick = function() {
    changeInfo(email.value, password.value, newPassword.value);
   }
+
+  deleteBtn.onclick = function() {
+  const delCmd = 'I understand and please to delete the account'; 
+  const certainDel = prompt("This action cannot be undone. This will permanently delete the account. \n\n If you are sure to delete then please enter '" + delCmd + " '");
+  const isSession = sessionStorage.getItem('tmfSession') ? true : false;	  
+  const curSess = isSession ? JSON.parse(sessionStorage.getItem('tmfSession')) : false;
+  const username = curSess.session.username;	  
+  console.log(curSess);
+  console.log(username) 	  
+  if (certainDel === "1") {
+    console.log("hello");
+	  fetch(api + "delete", {
+	  method: "DELETE",
+	  headers: {
+	    'Content-Type': 'application/json'
+	  },
+	  body: JSON.stringify({"name": username})		  
+	  })
+	  .then( res => res.json())	  
+	  .then( data => {
+	    alert("User is deleted successfully");
+	    sessionStorage.removeItem('tmfSession');
+	    window. open(url, '_self')})
+	  .catch( err => {alert(err); window.open(url, '_self')});
+  } else {
+    alert("The command to delete was wrong.");
+  }
+
+  }
+
   async function checkLogin() {
 //console.log('session1 : ', document.session.tmfSession)	 
   const isSession = sessionStorage.getItem('tmfSession') ? true : false;	  
@@ -192,6 +226,7 @@ password.oninput = function() {
           //sessionStorage.tmfSession = JSON.stringify(sess);
 	  }
   };
+
  checkLogin() 
     </script>
 
