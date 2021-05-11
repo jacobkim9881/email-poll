@@ -35,7 +35,10 @@
             </div>
 	    <!-- "http://localhost:5000/create" -->
 	    <!-- "https://whispering-brook-27977.herokuapp.com/create"-->
+	    <!-- "https://localhost:3000/email-validation.html" -->
+	    <!--  
             <form action="http://localhost:5000/create" method="post" rel="https://localhost:3000/account-sign-in.html" enctype="application/x-www-form-urlencoded" id="sign-up-form">
+	    -->
               <div class="form-group">
                 <input type="email" name="name" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" placeholder="Email Address" class="form-control">
               </div>
@@ -43,13 +46,15 @@
                 <input type="password" name="password" pattern="^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\S+$).{6,}$" placeholder="Password" class="form-control">
 		<small class="text-muted">Must be at least 6 characters</small><br/>
         <small class="text-muted">Must have at least 1 capital character</small><br/>
-       <small class="text-muted">Must have at least 1 number</small>
+       <small class="text-muted">Must have at least 1 number</small><br/>
+	<small id="res-alert"></small><br/>
+
               </div>
               <div class="form-group">
                 <input type="password" name="signup-password-confirm" placeholder="Confirm password" class="form-control">
               </div>
               <div class="form-group">
-                <button class="btn-block btn btn-primary" formtarget="_top" type="submit" id="signin-btn">Sign in</button>
+                <button class="btn-block btn btn-primary" formtarget="_top" type="submit" id="signup-btn">Sign up</button>
               </div>
               <div class="custom-control custom-checkbox">
                 <input type="checkbox" class="custom-control-input" id="signup-agree">
@@ -67,7 +72,7 @@
                 <span>Already have an account yet? <a href="#">Sign In</a>
                 </span>
               </div>
-            </form>
+	      <!-- </form> -->
           </div>
         </div>
       </div>
@@ -123,10 +128,17 @@
 <script src="https://apis.google.com/js/api.js"></script>
     <script type="text/javascript">
       window.addEventListener("load", function () {    document.querySelector('body').classList.add('loaded');  });
-      const signUp = document.getElementById('signin-btn');
+      const signUp = document.getElementById('signup-btn');
       const email = document.querySelector('input[name=name]');
       const password = document.querySelector('input[name=password]');
       const passwordConfirm = document.querySelector('input[name=signup-password-confirm]');
+      const api = "http://localhost:5000/";
+      const url = "https://localhost:3000/";
+
+
+//http://localhost:5000/create" 
+// "https://whispering-brook-27977.herokuapp.com/create"
+
 
  email.oninput = function() {
 	    if (!email.value) {
@@ -150,7 +162,31 @@ password.oninput = function() {
 	    } else signUp.disabled = false;
 	    
     }
-    
+signUp.onclick= function() {
+	fetch(api + "create", {
+	  method: "POST",
+	  headers: {
+      'Content-Type': 'application/json'
+    },
+	  body: JSON.stringify({
+		  "name": email.value,
+		  "password": password.value,
+		  "signup-password-confirm": passwordConfirm.value
+	  })
+	})
+		.then( res => res.json())
+       		.then( data => {
+	  let isError = Object.keys(data)[0] === "Error" ? true : false;
+	  let errMsg = isError ? Object.values(data)[0] : '';
+	  let resAlert = document.getElementById('res-alert');
+	  resAlert.style.color = 'red';
+          resAlert.innerText = errMsg;
+	  if(!isError) {
+			sessionStorage.setItem('tmfSession', email.value);
+			window.location.replace(url + "email-validation.html");
+	  } 
+		})	
+}	
     </script>
 
   </body>
