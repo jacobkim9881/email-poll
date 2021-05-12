@@ -102,11 +102,12 @@
       const codes = document.querySelector('input[name=codes]');
       const submitBtn = document.getElementById('submit-validation');
       const emailVal = sessionStorage.getItem('tmfSession');
+      let resAlert = document.getElementById('res-alert');
 
  codes.oninput = function() {
-	    if (!email.value) {
+	    if (!codes.value) {
 		    submitBtn.disabled = true;
-		    email.title = 'codes should be put';
+		   resAlert.value = 'codes should be put';
 	    } else submitBtn.disabled = false;
 
 }
@@ -187,16 +188,16 @@
 	  resAlert.style.color = 'red';
           resAlert.innerText = errMsg;
 	  if(!isError) {
+ 	    sessionStorage.removeItem('tmfSession');
 	    window.location.replace(url); 
 	  };
 		  })
   }
      submitBtn.onclick = function() {
-     const codesVal = document.querySelector('input[name=codes]').value;
-     verification(codes)	     
+     verification(codes.value)	     
      }
 
-
+sendEmailCodes();
 //  checkLogin();
     </script>
 <script src="https://apis.google.com/js/platform.js" async defer></script>
